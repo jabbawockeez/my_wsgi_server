@@ -14,6 +14,7 @@ class WSGIServer(object):
     
     def __init__(self, application, SERVER_ADDR = ('localhost', 8080)):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         
         self.SERVER_ADDR = SERVER_ADDR
         self.sock.bind(SERVER_ADDR)
@@ -94,7 +95,6 @@ class WSGIServer(object):
         self.client_sock.close()
     
     def handle_one_request(self):
-        print 'handle'
         self.orig_request = self.client_sock.recv(1024)
         
         print self.orig_request
