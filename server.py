@@ -6,6 +6,8 @@ import sys
 import StringIO
 import datetime
 import socket
+import time
+import threading
 
 GMT_FORMAT = '%a, %d %b %Y %H:%M:%S GMT'
 
@@ -64,20 +66,7 @@ class WSGIServer(object):
         
         self.headers = [status, server_headers + response_headers]
     
-    def finish_response(self, result):
-        #----------- code in start_response ---------
-        """
-        date = datetime.datetime.utcnow().strftime(GMT_FORMAT)
-        server_headers = [
-            ('Date' , date),
-            ('Server' , 'MyWSGIServer 1.0')
-            ]
-            
-        status = "200 OK"
-        response_headers = []
-        self.headers = [status, server_headers + response_headers]
-        """
-        #--------------------------------------------
+    def finish_response(self, result, client_sock):
         
         status, headers = self.headers
         
@@ -91,11 +80,12 @@ class WSGIServer(object):
         for data in result:
             response += data
 
-        self.client_sock.sendall(response)
-        self.client_sock.close()
+        time.sleep(10)
+        client_sock.sendall(response)
+        client_sock.close()
     
-    def handle_one_request(self):
-        self.orig_request = self.client_sock.recv(1024)
+    def handle_one_request(self, client_sock, client_ip):
+        self.orig_request = client_sock.recv(1024)
         
         print self.orig_request
         self.parse_request(self.orig_request)
@@ -106,14 +96,29 @@ class WSGIServer(object):
         result = self.application(env, self.start_response)
         
         # construct a response and send it back to the client
-        self.finish_response(result)
+        self.finish_response(result, client_sock)
 
     
     def serve_forever(self):
+        
         while True:
             print 'listening......'
-            self.client_sock = self.sock.accept()[0]
+            client_sock, client_ip = self.sock.accept()
+            #self.handle_one_request()
+            t = threading.Thread(target = self.handle_one_request, \
+                args = (client_sock, client_ip))
+            t.start()
+
+'''
+class handle_thread(threading.Thread):
+    def __init__(self, client_sock, client_ip):
+        threading.Thread.__init__(self)
+        self.client_sock = client_sock
+        self.client_ip = client_ip
+        
+    def run(self):
             self.handle_one_request()
+'''
 
 def make_server(application):
     server = WSGIServer(application)

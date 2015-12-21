@@ -1,4 +1,5 @@
 import web
+import time
         
 urls = (
     '/(.*)', 'hello'
@@ -18,6 +19,7 @@ class myapp(web.application):
             response = "<h1>hello from web.py in other path</h1>"
             
         start_response('200 OK', [('Content-Type', 'text/html')])
+        
         return response
 
 class hello:        
