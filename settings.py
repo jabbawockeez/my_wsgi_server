@@ -1,7 +1,7 @@
 # WSGI server configurations
 
 # host and port
-HOST = 'localhost'
+HOST = '0.0.0.0'
 PORT = 8080
 
 
@@ -32,23 +32,30 @@ ERROR_LOG = 'logs/error_log.txt'
 
 # log format
 ACCESS_LOG_FORMAT = [
-        'remotehost', 
-        'usernam', 
-        'auth-username', 
-        'timestamp', 
-        'request-line', 
-        'response-code', 
-        'response-size', 
+        # 'host', 
+        # 'username', 
+        # 'auth-username', 
+        # 'timestamp', 
+        # 'request-line', 
+        # 'response-code', 
+        # 'response-size', 
+        'Remote-Host', 
+        'Username', 
+        'Auth-Username', 
+        'Date', 
+        'Request-Line', 
+        'Response-Code', 
+        'Content-Length',
     ]
     
 ERROR_LOG_FORMAT = [
-        'remotehost', 
-        'usernam', 
-        'auth-username', 
-        'timestamp', 
-        'request-line', 
-        'response-code', 
-        'response-size', 
+        'Remote-Host', 
+        'Username', 
+        'Auth-Username', 
+        'Date', 
+        'Request-Line', 
+        'Response-Code', 
+        'Content-Length',
     ]
     
 # http Date header GMT time format

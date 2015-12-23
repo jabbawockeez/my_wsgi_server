@@ -10,6 +10,7 @@ import time
 import threading
 import re
 
+import logging
 from settings import *
 
 
@@ -32,13 +33,16 @@ class WSGIServer(object):
         # the defined static file suffix
         tmp_regex = '|'.join(STATIC_FILE_SUFFIX) + '$'
         self.STATIC_FILE_REGEX = re.compile(tmp_regex)
+
+        # set a lock to synchronize all threads 
+        self.lock = threading.Lock()
         
     
     def set_app(self, application):
         self.application = application
     
     def parse_request(self, orig_request):
-        request_line = orig_request.splitlines()[0]
+        request_line = orig_request.splitlines()[0].lower()
         #print request_line
         
         self.request_method, \
@@ -92,18 +96,25 @@ class WSGIServer(object):
         for data in result:
             response += data
 
-        #time.sleep(10)
+        print response
+        #time.sleep(15)
+
+        # write message to log file
+        if '200' in status:
+            logging.access_logging(self.orig_request, response, self.client_ip)
+        else:
+            logging.error_logging(self.orig_request, response, self.client_ip)
+
+        
         client_sock.sendall(response)
         client_sock.close()
-        
-        # write message to log file
-        # if status == '200':
-        #     access_logging()
-        # else:
-        #     error_logging()
     
     def handle_one_request(self, client_sock, client_ip):
+
+        # self.lock.acquire()
+
         self.orig_request = client_sock.recv(1024)
+        self.client_ip = client_ip
         
         print self.orig_request
         self.parse_request(self.orig_request)
@@ -123,6 +134,8 @@ class WSGIServer(object):
         # construct a response and send it back to the client
         self.finish_response(result, client_sock)
 
+        # self.lock.release()
+
     
     def serve_static_file(self):
         fullname = 'static' + self.request_path
@@ -136,12 +149,15 @@ class WSGIServer(object):
             # response_headers = []
             with open('static/404.html', 'r') as f:
                 content =  f.read()
-            self.start_response('404 NOT FOUND', [])
+            self.start_response('404 Not Found', [])
         else:
-            # status = '200 OK'
-            # response_headers = [('Content-Type', 'text/html')]
+            if 'jpg' in self.request_path:
+                doc_type = 'image/jpg'
+            elif 'html' in self.request_path:
+                doc_type = 'text/html'
+
             self.start_response('200 OK', \
-                [('Content-Type', 'text/html'), 
+                [('Content-Type', doc_type), 
                 ('Content-Length', len(content))])
         return content
     
@@ -154,7 +170,6 @@ class WSGIServer(object):
             t = threading.Thread(target = self.handle_one_request, \
                 args = (client_sock, client_ip))
             t.start()
-
 
 def make_server(application):
     server = WSGIServer(application)
@@ -180,5 +195,5 @@ if __name__ == '__main__':
     server = make_server(application)
     server.serve_forever()
 
-    
+
     

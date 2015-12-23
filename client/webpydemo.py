@@ -7,7 +7,7 @@ urls = (
 
 class hello:        
     def GET(self):
-        return 'Hello from web.py'
+        return '<h1>Hello from web.py</h1>'
         
 app = web.application(urls, globals()).wsgifunc()
 
