@@ -9,9 +9,11 @@ import socket
 import time
 import threading
 import re
+import multiprocessing
 
 import logging
 from settings import *
+import debug
 
 
 class WSGIServer(object):
@@ -35,6 +37,7 @@ class WSGIServer(object):
         self.STATIC_FILE_REGEX = re.compile(tmp_regex)
 
         # set a lock to synchronize all threads 
+        # self.lock = multiprocessing.Lock()
         self.lock = threading.Lock()
         
     
@@ -42,13 +45,18 @@ class WSGIServer(object):
         self.application = application
     
     def parse_request(self, orig_request):
-        request_line = orig_request.splitlines()[0].lower()
-        #print request_line
-        
-        self.request_method, \
-        self.request_path, \
-        self.request_version = request_line.split()
-        print 'request path', self.request_path
+        try:
+            request_line = orig_request.splitlines()[0]
+            #print request_line
+        except Exception as e:
+            #raise e
+            return
+        else:
+            self.request_method, \
+            self.request_path, \
+            self.request_version = request_line.split()
+
+            self.request_path = self.request_path.lower()
     
     def get_environ(self):
         env = dict()
@@ -95,15 +103,16 @@ class WSGIServer(object):
 
         for data in result:
             response += data
+        
+        debug.output('response', response)
 
-        print response
         #time.sleep(15)
 
         # write message to log file
         if '200' in status:
-            logging.access_logging(self.orig_request, response, self.client_ip)
+            logging.access_logging(self.orig_request, response, self.client_ip, self.lock)
         else:
-            logging.error_logging(self.orig_request, response, self.client_ip)
+            logging.error_logging(status, self.lock)
 
         
         client_sock.sendall(response)
@@ -113,26 +122,40 @@ class WSGIServer(object):
 
         # self.lock.acquire()
 
-        self.orig_request = client_sock.recv(1024)
-        self.client_ip = client_ip
-        
-        print self.orig_request
-        self.parse_request(self.orig_request)
-        
-        # see if the client requests a static file
-        # if any STATIC_FILE_SUFFIX in the request_path,
-        # then serve a file in the static directory
-        matched = self.STATIC_FILE_REGEX.search(self.request_path)
-        if matched:
-            result = self.serve_static_file()
-        else:
-            env = self.get_environ()
+        try:
+            self.orig_request = client_sock.recv(1024)
+
+            if not len(self.orig_request):
+                debug.output('request error', 'no request data')
+                logging.error_logging('no request data', self.lock)
+                return
+
+            self.client_ip = client_ip
             
-            # call the application callable and get back the HTTP body
-            result = self.application(env, self.start_response)
-        
-        # construct a response and send it back to the client
-        self.finish_response(result, client_sock)
+            debug.output('orig_request', self.orig_request)
+            self.parse_request(self.orig_request)
+
+            # see if the client requests a static file
+            # if any STATIC_FILE_SUFFIX in the request_path,
+            # then serve a file in the static directory
+            matched = self.STATIC_FILE_REGEX.search(self.request_path)
+            if matched:
+                print 'serving a stati file'
+                result = self.serve_static_file()
+            else:
+                print 'sending the request to the application'
+                env = self.get_environ()
+                debug.output('env', env)
+                
+                # call the application callable and get back the HTTP body
+                result = self.application(env, self.start_response)
+            
+            # construct a response and send it back to the client
+            self.finish_response(result, client_sock)
+        except Exception as e:
+            #debug.output('exception', e)
+            # logging.error_logging(str(e))
+            raise e
 
         # self.lock.release()
 
@@ -151,8 +174,11 @@ class WSGIServer(object):
                 content =  f.read()
             self.start_response('404 Not Found', [])
         else:
-            if 'jpg' in self.request_path:
+            #if 'jpg' in self.request_path:
+            if re.search(r'jpg$', self.request_path):
                 doc_type = 'image/jpg'
+            elif re.search(r'ico$', self.request_path):
+                doc_type = 'image/png'
             elif 'html' in self.request_path:
                 doc_type = 'text/html'
 
@@ -162,14 +188,22 @@ class WSGIServer(object):
         return content
     
     def serve_forever(self):
-        
+
         while True:
             print 'listening......'
-            client_sock, client_ip = self.sock.accept()
-            #self.handle_one_request()
-            t = threading.Thread(target = self.handle_one_request, \
-                args = (client_sock, client_ip))
-            t.start()
+            try:
+                client_sock, client_ip = self.sock.accept()
+                debug.output('client sock', client_sock)
+                #self.handle_one_request()
+                t = threading.Thread(target = self.handle_one_request, \
+                    args = (client_sock, client_ip))
+                t.start()
+                debug.output('current threads', threading.enumerate())
+            except Exception as e:
+                debug.output('exception', e)
+                # logging.error_logging(str(e))
+            finally:
+                pass
 
 def make_server(application):
     server = WSGIServer(application)

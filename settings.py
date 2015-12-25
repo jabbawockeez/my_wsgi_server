@@ -7,9 +7,9 @@ PORT = 8080
 
 # callable application
 APPLICATION = [
-        'client',       # module path
-        'webpydemo',   # module name
-        'app'           # application name
+        'client/blog',               # module path
+        'blog',   # module name
+        'app'                   # application name
     ]
 
 # static file suffix
@@ -19,6 +19,7 @@ STATIC_FILE_SUFFIX = [
         '.css',
         '.jpg',
         '.txt',
+        'ico', 
     ]
     
 # the 
@@ -48,15 +49,15 @@ ACCESS_LOG_FORMAT = [
         'Content-Length',
     ]
     
-ERROR_LOG_FORMAT = [
-        'Remote-Host', 
-        'Username', 
-        'Auth-Username', 
-        'Date', 
-        'Request-Line', 
-        'Response-Code', 
-        'Content-Length',
-    ]
+# ERROR_LOG_FORMAT = [
+#         'Remote-Host', 
+#         'Username', 
+#         'Auth-Username', 
+#         'Date', 
+#         'Request-Line', 
+#         'Response-Code', 
+#         'Content-Length',
+#     ]
     
 # http Date header GMT time format
 GMT_FORMAT = '%a, %d %b %Y %H:%M:%S GMT'

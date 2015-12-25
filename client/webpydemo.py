@@ -2,15 +2,32 @@ import web
 import time
         
 urls = (
-    '/', 'hello'
+    '/', 'hello',
+    '/(.*)', 'error',
 )
 
 class hello:        
     def GET(self):
         return '<h1>Hello from web.py</h1>'
+
+class error:
+    def GET(self, obj):
+        #raise web.notfound()
+        return "%s not found" % obj
+
+def notfound():  
+    return web.notfound("Sorry, the page you were looking for was not found.........")  
+
+    #return web.notfound(render.notfound())  
+    #return web.notfound(str(render.notfound()))  
+  
+def internalerror():  
+    return web.internalerror("Bad, bad server. No donut for you.")  
+        
         
 app = web.application(urls, globals()).wsgifunc()
-
+app.notfound = notfound  
+app.internalerror = internalerror
 
 # class myapp(web.application):
 #     def __init__(self, urls = urls, globals = globals()):

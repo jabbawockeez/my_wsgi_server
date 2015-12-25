@@ -1,9 +1,11 @@
 # Define two functions write to log files.
 
 from settings import *
+import debug
 
 import os
 import time
+import datetime
 import re
 
 
@@ -29,7 +31,10 @@ import re
 #         pass
 
 
-def access_logging(request, response, client_ip):
+def access_logging(request, response, client_ip, lock):
+
+    if not (request and response and client_ip):
+        return
 
     request, response = trim_info(request, response)
 
@@ -41,14 +46,9 @@ def access_logging(request, response, client_ip):
 
     info['Request-Line'] = request_lines[0]
     info['Response-Code'] = response_lines[0].split()[1]
-    print type(client_ip)
     info['Remote-Host'] = client_ip[0]
 
     all_info = request_lines[1 : ] + response_lines[1 : ]
-
-    print '-----------------------------logging--------------------------------'
-    print all_info
-    print '-----------------------------logging--------------------------------'
 
     for i in all_info:
         try:
@@ -68,26 +68,47 @@ def access_logging(request, response, client_ip):
     msg = ''
 
     for i in ACCESS_LOG_FORMAT:
-        print info[i]
         if i == 'Date':
             msg += '[%s] ' % info[i]
         elif i == 'Request-Line':
             msg += '"%s" ' % info[i]
         else:
             msg += '%s ' % info[i]
+    msg += '\n'
 
 
     # if the log directory does not exists, then create it
     if not os.path.exists(os.path.dirname(ACCESS_LOG)):
         os.mkdir(os.path.dirname(ACCESS_LOG))
 
-    print msg
-    with open(ACCESS_LOG, 'a') as f:
-        f.write(msg)
+    debug.output('access_log', msg)
 
+    with lock:
+        with open(ACCESS_LOG, 'a') as f:
+            f.write(msg)
 
-def error_logging(request, response, client_ip):
-    print '-----------------------------logging error--------------------------------'
+# [Wed Oct 11 14:32:52 2000] [error] [client 127.0.0.1] client denied by server configuration: /export/ap/htdocs/test
+
+def error_logging(error_info, lock):
+
+    if not error_info:
+        return
+
+    # format the Date
+    date = datetime.datetime.utcnow().strftime("%a %b %d %H:%M:%S")
+
+    msg = '[%s] %s\n' % (date, error_info)
+
+    # if the log directory does not exists, then create it
+    if not os.path.exists(os.path.dirname(ERROR_LOG)):
+        os.mkdir(os.path.dirname(ERROR_LOG))
+
+    debug.output('error_log', msg)
+
+    with lock:
+        with open(ERROR_LOG, 'a ') as f:
+            f.write(msg)
+
 
 
 def trim_info(request, response):
@@ -95,5 +116,8 @@ def trim_info(request, response):
     new_request = request[ : pos]
     pos = response.find('\r\n\r\n')
     new_response = response[ : pos]
+
+    debug.output('new_request', new_request)
+    debug.output('new_response', new_response)
 
     return new_request, new_response
