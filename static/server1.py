@@ -6,28 +6,26 @@ import threading
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
-sock.bind(('0.0.0.0', 8080))
+sock.bind(('0.0.0.0', 443))
 sock.listen(5)
-
-def func(client_sock):
-
-    request = client_sock.recv(1024)
-
-    print '--------------------'
-    print request
-    print '--------------------'
-    print len(request)
-
-    client_sock.send('test')
-    client_sock.close()
-
-    # print threading.currentThread()
 
 while True:
     print 'listening'
     client_sock, client_ip = sock.accept()
 
-    t = threading.Thread(target = func, args = (client_sock, ))
-    t.start()
+    orig_request = ''
 
-    # print threading.enumerate()
+    # while True:
+        # req = ''
+    req = client_sock.recv(1024)
+    print req
+
+        # orig_request += req
+
+        # client_sock.settimeout(2)
+
+        # if len(req) < 1024:
+        #     break
+
+    print '------------------------------------------------------------------------'
+    # print orig_request

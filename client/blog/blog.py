@@ -2,8 +2,10 @@
 
 import web
 import model
+import debug
 
 import os
+import StringIO
 
 ### Url mappings
 
@@ -15,7 +17,7 @@ urls = (
     '/edit/(\d+)', 'Edit',
 )
 
-template_dir = os.path.join(os.path.dirname(__file__), 'templates/')
+# template_dir = os.path.join(os.path.dirname(__file__), 'templates/')
 
 ### Templates
 t_globals = {
@@ -47,7 +49,7 @@ class New:
             size=30,
             description="Post title:"),
         web.form.Textarea('content', web.form.notnull, 
-            rows=30, cols=80,
+            rows=20, cols=80,
             description="Post content:"),
         web.form.Button('Post entry'),
     )
@@ -57,6 +59,7 @@ class New:
         return render.new(form)
 
     def POST(self):
+        # debug.output('web data', web.data())
         form = self.form()
         if not form.validates():
             return render.new(form)
@@ -81,15 +84,17 @@ class Edit:
 
 
     def POST(self, id):
+        # debug.output('web data', web.data())
         form = New.form()
         post = model.get_post(int(id))
         if not form.validates():
             return render.edit(post, form)
         model.update_post(int(id), form.d.title, form.d.content)
+
         raise web.seeother('/')
 
 
 app = web.application(urls, globals()).wsgifunc()
 
-# if __name__ == '__main__':
-#     app.run()
+if __name__ == '__main__':
+    app.run()

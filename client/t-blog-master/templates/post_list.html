@@ -1,0 +1,53 @@
+{% extends admin_base.html %}
+{% block title %}blogs{% end %}
+{% block main %}
+<h2 class="l-centered">Blogs</h2>
+<hr>
+<div class="marketing-ribbon centered-div">
+    <table class="full-size-table pure-table pure-table-bordered ">
+        <thead>
+            <tr>
+                <th>
+                    #
+                </th>
+                <th>
+                    Title
+                </th>
+                <th>
+                    Category
+                </th>
+                <th>
+                    PostTime
+                </th>
+                <th>
+                    Method
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if headers %}
+            {% for i,header in enumerate(headers) %}
+            <tr>
+                <td>
+                  {{i+1}}
+                </td>
+                <td>
+                  <a href="/admin/post/edit/{{header[0]}}">{{header[1]}}</a>
+                </td>
+                <td>
+                    {{header[2]}}
+                </td>
+                <td>
+                    {{header[3].strftime("%b-%d-%y")}}
+                </td>
+                <td>
+                    <a href="/admin/post/edit/{{header[0]}}">edit</a>|
+                    <a href="/admin/post/delete/{{header[0]}}">delete</a>
+                </td>
+            </tr>
+            {% end %}
+            {% end %}
+        </tbody>
+    </table>
+</div>
+{% end %}

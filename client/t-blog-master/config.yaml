@@ -1,0 +1,8 @@
+name: helloworld
+version: 2
+
+libraries:
+- name: markdown
+  version: "2.3.1"
+- name: pygments
+  version: "1.6"

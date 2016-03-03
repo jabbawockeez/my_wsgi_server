@@ -1,0 +1,16 @@
+{% extends admin_base.html %}
+{% block title %}edit category{% end %}
+{% block main %}
+<h2 class="l-centered">Edit Category</h2>
+<hr>
+<div class="marketing-ribbon centered-div l-centered">
+    <form class="pure-form" method="post">
+        <fieldset>
+            <input id="id" name="id" type="hidden" value="{{category.name}}">
+            <input id="name" name="name" type="text" placeholder="Input category name" value="{{category.name}}">
+
+            <button type="submit" class="pure-button notice">submit</button>
+        </fieldset>
+    </form>
+</div>
+{% end %}

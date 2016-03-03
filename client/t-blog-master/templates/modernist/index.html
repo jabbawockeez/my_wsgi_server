@@ -1,0 +1,21 @@
+{% extends base.html %}
+{% block title %}Hi{% end %}
+{% if site_options.description %}
+    {% block description %}{{ site_options["description"] }}{% end %}
+{% end %}
+{% if site_options.keywords %}
+    {%block keywords%}{{','.join(site_options["keywords"])}}{%end%}
+{% end %}
+    
+{% block content %}
+    {% if tag %}
+    <h2 class="archive-title tag">tag: {{tag}}</h2>
+    {% end %}
+    {% if category %}
+    <h2 class="archive-title tag">category: {{category}}</h2>
+    {% end %}
+    {% for article in articles %}
+        {% module Article(article) %}
+    {% end %}
+    {% module Pagination(total, current_page) %}
+{% end %}

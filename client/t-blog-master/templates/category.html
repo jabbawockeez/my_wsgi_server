@@ -1,0 +1,47 @@
+{% extends admin_base.html %}
+{% block title %}categories{% end %}
+{% block main %}
+<h2 class="l-centered">Categories</h2>
+<hr>
+<div class="marketing-ribbon centered-div">
+    <table class="full-size-table pure-table pure-table-bordered ">
+        <thead>
+            <tr>
+                <th>
+                    #
+                </th>
+                <th>
+                    Name
+                </th>
+                <th>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i,category in enumerate(categories) %}
+            <tr>
+                <td>
+                    {{i+1}}
+                </td>
+                <td>
+                    <a href="/admin/category/edit/{{category.id}}">{{category.name}}</a>
+                </td>
+                <td>
+                    <a href="/admin/category/edit/{{category.id}}">edit</a> | <a href="/admin/category/delete/{{category.id}}">delete</a> 
+                </td>
+            </tr>
+            {% end %}
+        </tbody>
+    </table>
+</div>
+<div class="marketing-ribbon centered-div">
+    <h3>Add a new category:</h3>
+    <form class="pure-form" method="post">
+        <fieldset>
+            <input id="name" name="name" type="text" placeholder="Input category name">
+
+            <button type="submit" class="pure-button notice">submit</button>
+        </fieldset>
+    </form>
+</div>
+{% end %}

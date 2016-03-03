@@ -1,0 +1,29 @@
+{% extends base.html %}
+{% block title %}Archive{% end %}
+{% block content %}
+<h2 class="archive-title">Archives</h2>
+{% set years = [] %}
+<div class="archive">
+    {% for article in articles%}
+    {% set current_year =  article.post_time.strftime('%Y') %}
+    {% if current_year not in years %}
+    <div class="archive-year">
+        <a href="./archive/{{current_year}}/">{{current_year}}</a>
+        <div class="sep"></div>
+    </div>
+    {% set years.append(current_year) %}
+    {% end %}
+    <article class="post">
+        <header>
+            <div class="icon"></div>
+            <time datetime="{{article.post_time.strftime('%b-%d-%Y %H:%M:%S')}}">
+                <a href="#">{{article.post_time.strftime('%b-%d')}}</a>
+            </time>
+            <h1 class="title"><a href="/post/{{article.title}}">{{article.title}}</a>
+            </h1>
+        </header>
+    </article>
+    {% end %}
+</div>
+{% module Pagination(total, current_page, True) %}
+{% end %}

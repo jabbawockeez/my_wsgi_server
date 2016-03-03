@@ -1,0 +1,8 @@
+<div class="widget recent-posts">
+    <h3 class="title">Recent Posts</h3>
+    <ul class="entry">
+        {% for post in recent_posts %}
+        <li><a href="/post/{{post.title}}">{{post.title}}</a><li>
+        {% end %}
+    </ul>
+</div>

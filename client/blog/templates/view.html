@@ -1,6 +1,11 @@
 $def with (post)
 
-<h1>$post.title</h1>
-$datestr(post.posted_on)<br/>
 
-$post.content
+<h1>$post.title</h1>
+
+<div>
+    <p>$datestr(post.posted_on)<br/><br/></p>
+    
+    $for i in post.content.splitlines():
+        <p>$i</p>
+</div>

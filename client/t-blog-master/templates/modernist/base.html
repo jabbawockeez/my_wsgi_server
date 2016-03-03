@@ -1,0 +1,171 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>{% block title %}{% end block %} | {{site_options["site_name"]}}</title>
+    {% if site_options["author"] %}
+    <meta name="author" content="{{site_options["author"]}}">
+    {% end %}
+    <meta name="description" content="{% block description %}{% end %}">
+    <meta name="keywords" content="{% block keywords %}{% end %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta property="og:title" content="{% block title %}{% end block %} | {{site_options["site_name"]}}" />
+    <meta property="og:site_name" content="{{site_options["site_name"]}}" />
+    <!-- <link rel="alternate" href=" " title="" type="application/atom+xml"> -->
+    <link rel="stylesheet" href="/static/css/style.css" media="screen" type="text/css">
+    <link rel="stylesheet" href="/static/css/about.css" media="screen" type="text/css">
+    <link rel="stylesheet" href="/static/css/pygments.css" media="screen" type="text/css">
+    <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico">
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+    <script type="text/javascript" async="" src="http://static.duoshuo.com/embed.js" charset="UTF-8"></script>
+    <link type="text/css" rel="stylesheet" href="http://static.duoshuo.com/styles/embed.css?f27daa10.css">
+    {% module GoogleAnalytics() %}
+    <style type="text/css">.ds-meta, 
+      #ds-thread #ds-reset .ds-powered-by { 
+        display: none; 
+      }
+
+
+      #ds-thread #ds-reset .ds-sort a.ds-current,
+      #ds-thread #ds-reset .ds-sort a:active,
+      #ds-reset .ds-highlight,
+      #ds-thread #ds-reset .ds-login-buttons .ds-more-services {
+        color: #069 !important;
+      }
+
+
+      #ds-thread #ds-reset #ds-bubble a,
+      #ds-thread #ds-reset #ds-bubble a:hover,
+      #ds-thread #ds-reset .ds-login-buttons .ds-more-services:hover {
+        color: #333333 !important;
+      }
+
+
+      #ds-thread #ds-reset .ds-post-self {
+        border-top: 0;
+      }
+
+
+      #ds-thread #ds-reset li.ds-post,
+      #ds-thread #ds-reset .ds-paginator {
+        border-top: 1px dotted rgba(0, 0, 0, 0.13) !important;
+      }
+
+
+      #ds-thread #ds-reset .ds-comments-info {
+        margin-top: 20px !important;
+      }
+
+
+      #ds-thread #ds-reset .ds-comments {
+        border-bottom: 1px dotted rgba(0, 0, 0, 0.13) !important;
+      }
+
+
+      #ds-thread #ds-reset li.ds-post { 
+        margin-bottom: 10px; 
+      }
+
+
+      #ds-thread #ds-reset li.ds-post-placeholder {
+        padding: 3em 0 !important;
+        font-size: 14px;
+      }
+
+
+      #ds-thread #ds-reset ul.ds-children { 
+        border-left: 3px solid rgba(0, 0, 0, 0.13); 
+      }
+
+
+      #ds-thread #ds-reset ul.ds-children .ds-post-self { 
+        padding-left: 20px; 
+      }
+
+
+      #ds-thread #ds-reset .ds-toolbar {
+        border-top: none !important;
+      }
+
+
+      #ds-thread #ds-reset .ds-post-toolbar {
+        box-shadow: none;
+        -webkit-box-shadow: none;
+      }
+
+
+      #ds-reset .ds-avatar,
+      #ds-reset .ds-avatar img {
+        border-radius: 27px;
+        -webkit-border-radius: 27px;
+        -moz-border-radius:27px;
+      }
+</style>
+</head>
+
+
+<body>
+  <div class="wrapper">
+    <header id="header">
+      <div class="title">
+        <h1><a href="/">{{site_options["site_name"]}}</a></h1>
+        {% if site_options["subtitle"] %}
+        <p><a href="/">{{site_options["subtitle"]}}</a></p>
+        {% end %}
+      </div>
+      <nav class="nav">
+        <ul>
+          {% for nav in site_options["navs"]%}
+          <li><a href="{{nav["link"]}}">{{nav["name"]}}</a></li> 
+          {% end %}
+        </ul>
+        <div class="clearfix"></div>
+      </nav>
+      <div class="clearfix"></div>
+    </header>
+    <div class="content">
+      {% block content %}{% end %}
+    </div>
+  </div>
+
+  <div class="widget-wrapper">
+    <aside id="sidebar">
+      {% module TagCloud(tags) %}
+      {% module BlogRoll(links) %}
+      {% module RecentPosts(recent_posts) %}
+      </div>
+    </aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer">
+    {%if site_options["copyright"]%}
+    <div class="copyright">&copy; <a href="/">{{site_options["copyright"]}}<a></div>
+    {%end%}
+    <div class="theme-copyright">
+      Theme by <a href="https://github.com/orderedlist" target="_blank">orderedlist</a>
+            | Redesign by <a href="http://heroicyang.com/" target="_blank">Heroic Yang</a>
+    </div>
+    <div class="clearfix"></div>
+  </footer>
+  <script src="/static/js/scale.fix.js"></script>
+  <script src="/static/js/jquery.imagesloaded.min.js"></script>
+  <script src="/static/js/gallery.js"></script>
+  <script type="text/javascript">
+  var duoshuoQuery = {
+      short_name: '{{ site_options["duoshuo_shortname"] }}'
+  };
+  (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';
+      ds.async = true;
+      ds.src = 'http://static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+  </div>
+</body>
+</html>

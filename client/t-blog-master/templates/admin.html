@@ -1,0 +1,30 @@
+{% extends admin_base.html %}
+{% block title %}Admin{% end %}
+{% block main %}
+<div class="hero">
+  <h1 class="pure-u-1">
+    imjustfly.net
+  </h1>
+  <h2 class="pure-u-3-4 l-centered">
+    Write and share your thoughts.Do it now!
+  </h2>
+  <div class="hero-cta pure-u-3-4">
+    <p>
+      <a class="pure-button pure-button-cta" href="/admin/add_post">Start Writing</a>
+      <a class="pure-button pure-button-secondary" href="/">To Main Page</a>
+    </p>
+  </div>
+</div>
+<div class="pure-u-1">
+  <div class="size-chart l-vbox pure-g">
+    {% for i,item in enumerate(category_info) %}
+    <div class="size-chart-item size-chart-{{i}} pure-u" style="width: {{100*item[1]/post_count}}%;">
+      <a class="size-chart-label" href="/admin/posts?category={{item[0]}}">
+        {{ item[0] }}
+        <span class="size-chart-size">{{item[1]}}篇</span>
+      </a>
+    </div>
+    {% end %}
+  </div>
+</div>
+{% end %}

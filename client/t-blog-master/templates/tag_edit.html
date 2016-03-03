@@ -1,0 +1,16 @@
+{% extends admin_base.html %}
+{% block title %}edit tag{% end %}
+{% block main %}
+<h2 class="l-centered">Edit Tag</h2>
+<hr>
+<div class="marketing-ribbon centered-div l-centered">
+    <form class="pure-form" method="post">
+        <fieldset>
+            <input type="hidden" name="id" id ="id" value="{{tag.id}}">
+            <input id="name" name="name" type="text" placeholder="Input tag name" value="{{tag.name}}">
+
+            <button type="submit" class="pure-button notice">submit</button>
+        </fieldset>
+    </form>
+</div>
+{% end %}

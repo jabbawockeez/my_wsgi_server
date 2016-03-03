@@ -1,0 +1,8 @@
+<div class="widget tagcloud first">
+    <h3 class="title">Tag Cloud</h3>
+    <div class="entry">
+        {% for tag in tags %}
+        <a href="/?tag={{tag.name}}" style="font-size: 16px;">{{tag.name}}</a>
+        {% end %}
+    </div>
+</div>

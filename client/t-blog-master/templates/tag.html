@@ -1,0 +1,49 @@
+{% extends admin_base.html %}
+{% block title %}tags{% end %}
+{% block main %}
+<h2 class="l-centered">Tags</h2>
+<hr>
+<div class="marketing-ribbon centered-div">
+    <table class="full-size-table pure-table pure-table-bordered ">
+        <thead>
+            <tr>
+                <th>
+                    #
+                </th>
+                <th>
+                    Name
+                </th>
+                <th>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if tags %}
+            {% for i,tag in enumerate(tags) %}
+            <tr>
+                <td>
+                    {{i+1}}
+                </td>
+                <td>
+                    <a href="/admin/tag/edit/{{tag.id}}">{{tag.name}}</a>
+                </td>
+                <td>
+                    <a href="/admin/tag/edit/{{tag.id}}">edit</a> | delete
+                </td>
+            </tr>
+            {% end %}
+            {% end %}
+        </tbody>
+    </table>
+</div>
+<div class="marketing-ribbon centered-div">
+    <h3>Add a new tag:</h3>
+    <form class="pure-form" method="post">
+        <fieldset>
+            <input id="name" name="name" type="text" placeholder="Input tag name">
+
+            <button type="submit" class="pure-button notice">submit</button>
+        </fieldset>
+    </form>
+</div>
+{% end %}

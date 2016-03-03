@@ -1,0 +1,9 @@
+<nav id="pagination">
+    {% if prev %}
+    <a href="?p={{prev}}" class="prev">Prev</a>
+    {%end%}
+    {% if next %}
+    <a href="?p={{next}}" class="next">Next</a>
+    {%end%}
+    <div class="clearfix"></div>
+</nav>

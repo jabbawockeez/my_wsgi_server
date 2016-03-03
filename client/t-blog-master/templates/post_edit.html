@@ -1,0 +1,47 @@
+{% extends admin_base.html %}
+{% block title %}add a blog{% end %}
+{% block main %}
+<h2 class="l-centered">Edit blog</h2>
+<hr>
+<div class="marketing-ribbon centered-div">
+    <form class="pure-form pure-form-stacked" method="post">
+        <fieldset>
+            <label for="title">
+                Title
+            </label>
+            <input id="title" name ="title" class="pure-input-1 add-post" type="input" placeholder="Input your title here" value="{{post.title}}">
+            <label for="content">
+                Content
+            </label>
+            <textarea id="content" name="content" class="pure-input-1 add-post" placeholder="Write down here">{{post.content}}</textarea>
+            <label for="category">
+                Category
+            </label>
+            <select id="category" name="category" class="pure-input-1 add-post">
+                {% if categories %}
+                {% for category in categories %}
+                <option value="{{category.id}}" {% if post.category_id == category.id %}selected{%end%}>
+                    {{category.name}}
+                </option>
+                {% end %}
+                {% end %}
+            </select>
+            <label for="tags">
+                Tags
+            </label>
+            <div>
+            {% if tags %}
+            {% for tag in tags %}
+            <input name="tags" type="checkbox" {%if tag.id in selected_tags %}checked{%end%} name="tags" value="{{tag.id}}"><span>{{tag.name}}</span>&nbsp;&nbsp; 
+            {% end %}
+            {% else %}
+            No tags
+            {% end %}
+            </div>
+        </fieldset>
+        <button type="submit" class="notice pure-button pure-input-1">
+            Submit
+        </button>
+    </form>
+</div>
+{% end %}

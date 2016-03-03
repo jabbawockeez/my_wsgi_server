@@ -1,0 +1,7 @@
+{% extends base.html %}
+{% block title %}{{ article.title }}{% end %}
+{% block description %}{{ article.title }}{% end %}
+{%block keywords%}{{','.join([tag.name for tag in tags])}}{%end%}
+{% block content %}
+    {% module Article(article, show_all=True) %}
+{% end %}

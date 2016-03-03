@@ -1,0 +1,8 @@
+<div class="widget blogroll">
+    <h3 class="title">Links</h3>
+    <ul class="entry">
+        {% for link in links %}
+        <li><a href="{{link["url"]}}" target="_blank">{{link["name"]}}</a></li>
+        {% end %}
+    </ul>
+</div>

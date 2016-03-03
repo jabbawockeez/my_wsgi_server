@@ -1,0 +1,41 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>
+            {% block title %}{% end %} - imjustfly.net
+        </title>
+        <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.1.0/base-min.css">
+        <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.1.0/pure-min.css">
+        <link rel="stylesheet" href="/static/css/admin.css">
+    </head>
+    <body>
+        <div class="pure-g-r " id="layout">
+            <div class="pure-u" id="menu">
+                <div class="pure-menu pure-menu-open">
+                    <a class="pure-menu-heading" href="/admin">imjustfly</a>
+                    <ul>
+                        <li class=" ">
+                            <a href="/admin/add_post">Add Blog</a>
+                        </li>
+                        <li class=" ">
+                            <a href="/admin/posts">Blog List</a>
+                        </li>
+                        <li class=" ">
+                            <a href="/admin/categories">Categories</a>
+                        </li>
+                        <li class=" ">
+                            <a href="/admin/tags">Tags</a>
+                        </li>
+                        <li class=" menu-item-divided">
+                            <a href="/admin/logout">Logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="pure-u" id="main">
+                {% block main %}
+                {% end %}
+            </div>
+        </div>
+    </body>
+</html>

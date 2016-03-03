@@ -1,0 +1,35 @@
+<article class="post">
+    <header>
+        <div class="icon"></div>
+        <time datetime="{{article.post_time.strftime('%b-%d-%y %H:%M:%S')}}">
+          <a href="{{article.title}}">{{article.post_time.strftime('%b-%d-%Y')}}</a>
+        </time>
+        <h1 class="title"><a href="/post/{{article.title}}">{{article.title}}</a>
+        </h1>
+    </header>
+    <div class="entry">
+        {% raw article.markdown_content %}
+    </div>
+    <footer class="end-sep">
+      {% if show_all %}
+        <div class="tags">
+          {% for tag in article.tags %}
+          <a href="/tag/{{tag.name}}">{{tag.name}}</a>
+          {% end %}
+        </div>
+      {% else %}
+        <div class="alignleft">
+            <a href="/post/{{article.title}}#comment" class="more-link">发表评论</a>
+        </div>
+      {% end %}
+        <div class="clearfix"></div>
+    </footer>
+    {% if show_all %}
+    <a name="comment"></a>
+    <section id="comment">
+      <h1 class="title">Comment:</h1>
+      <div class="ds-thread" data-title="{{article.title}}">
+      </div>
+    </section>
+    {% end %}
+</article>
