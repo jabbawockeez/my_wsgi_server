@@ -5,4 +5,4 @@ def output(var_name, var):
 
 def output_file(file):
     with open(file, 'r') as f:
-        output('file conten', f.read())
+        output('file content', f.read())
